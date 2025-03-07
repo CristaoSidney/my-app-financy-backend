@@ -18,4 +18,4 @@ WORKDIR /app
 
 COPY --from=build /app/target/my_app_financy_backend-0.0.1-SNAPSHOT.jar /app/my_app_financy_backend-0.0.1-SNAPSHOT.jar
 
-ENTRYPOINT ["java", "-jar", "/app/tmp/my_app_financy_backend-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "/app/my_app_financy_backend-0.0.1-SNAPSHOT.jar"]
