@@ -1,5 +1,6 @@
 package br.com.cristaosidney.my_app_financy_backend.controller;
 
+import br.com.cristaosidney.my_app_financy_backend.exception.ResourceNotFoundException;
 import br.com.cristaosidney.my_app_financy_backend.exception.UpdateRecordException;
 import br.com.cristaosidney.my_app_financy_backend.model.ContraCheque;
 import br.com.cristaosidney.my_app_financy_backend.model.ContraChequeRubrica;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/contra-cheque")
@@ -68,13 +70,18 @@ public class ContraChequeController {
 
     @PostMapping("/{contraChequeId}/rubricas")
     public ContraChequeRubrica createRubrica(@PathVariable Long contraChequeId, @RequestBody ContraChequeRubrica rubrica) {
-        return contraChequeRubricaService.createContraChequeRubrica(contraChequeId, rubrica);
+        ContraCheque contraCheque = contraChequeService.findById(contraChequeId)
+                .orElseThrow(() -> new ResourceNotFoundException("ContraCheque not found with id " + contraChequeId));
+        rubrica.setContraCheque(contraCheque);
+        return contraChequeRubricaService.createContraChequeRubrica(rubrica);
     }
 
     @PutMapping("/{contraChequeId}/rubricas/{id}")
     public ResponseEntity<ContraChequeRubrica> updateRubrica(@PathVariable Long contraChequeId, @PathVariable Long id, @RequestBody ContraChequeRubrica rubricaDetails) {
         try {
-            ContraChequeRubrica updatedRubrica = contraChequeRubricaService.updateContraChequeRubrica(contraChequeId, id, rubricaDetails);
+            Optional<ContraCheque> contraCheque = contraChequeService.findById(contraChequeId);
+            rubricaDetails.setContraCheque(contraCheque.get());
+            ContraChequeRubrica updatedRubrica = contraChequeRubricaService.updateContraChequeRubrica(id, rubricaDetails);
             return ResponseEntity.ok(updatedRubrica);
         } catch (UpdateRecordException e) {
             return ResponseEntity.notFound().build();
