@@ -7,11 +7,11 @@ import br.com.cristaosidney.my_app_financy_backend.model.ContraChequeRubrica;
 import br.com.cristaosidney.my_app_financy_backend.service.ContraChequeRubricaService;
 import br.com.cristaosidney.my_app_financy_backend.service.ContraChequeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/contra-cheque")
@@ -79,12 +79,15 @@ public class ContraChequeController {
     @PutMapping("/{contraChequeId}/rubricas/{id}")
     public ResponseEntity<ContraChequeRubrica> updateRubrica(@PathVariable Long contraChequeId, @PathVariable Long id, @RequestBody ContraChequeRubrica rubricaDetails) {
         try {
-            Optional<ContraCheque> contraCheque = contraChequeService.findById(contraChequeId);
-            rubricaDetails.setContraCheque(contraCheque.get());
+            ContraCheque contraCheque = contraChequeService.findById(contraChequeId)
+                    .orElseThrow(() -> new ResourceNotFoundException("ContraCheque not found with id " + contraChequeId));
+            rubricaDetails.setContraCheque(contraCheque);
             ContraChequeRubrica updatedRubrica = contraChequeRubricaService.updateContraChequeRubrica(id, rubricaDetails);
             return ResponseEntity.ok(updatedRubrica);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         } catch (UpdateRecordException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
