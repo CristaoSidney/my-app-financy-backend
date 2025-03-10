@@ -2,6 +2,8 @@ package br.com.cristaosidney.my_app_financy_backend.controller;
 
 import br.com.cristaosidney.my_app_financy_backend.exception.UpdateRecordException;
 import br.com.cristaosidney.my_app_financy_backend.model.ContraCheque;
+import br.com.cristaosidney.my_app_financy_backend.model.ContraChequeRubrica;
+import br.com.cristaosidney.my_app_financy_backend.service.ContraChequeRubricaService;
 import br.com.cristaosidney.my_app_financy_backend.service.ContraChequeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,9 @@ public class ContraChequeController {
 
     @Autowired
     private ContraChequeService contraChequeService;
+
+    @Autowired
+    private ContraChequeRubricaService contraChequeRubricaService;
 
     @GetMapping
     public List<ContraCheque> getAllContraCheques() {
@@ -46,6 +51,39 @@ public class ContraChequeController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteContraCheque(@PathVariable Long id) {
         contraChequeService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{contraChequeId}/rubricas")
+    public List<ContraChequeRubrica> getAllRubricasByContraChequeId(@PathVariable Long contraChequeId) {
+        return contraChequeRubricaService.findAllByContraChequeId(contraChequeId);
+    }
+
+    @GetMapping("/{contraChequeId}/rubricas/{id}")
+    public ResponseEntity<ContraChequeRubrica> getRubricaById(@PathVariable Long contraChequeId, @PathVariable Long id) {
+        return contraChequeRubricaService.findByIdAndContraChequeId(id, contraChequeId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/{contraChequeId}/rubricas")
+    public ContraChequeRubrica createRubrica(@PathVariable Long contraChequeId, @RequestBody ContraChequeRubrica rubrica) {
+        return contraChequeRubricaService.createContraChequeRubrica(contraChequeId, rubrica);
+    }
+
+    @PutMapping("/{contraChequeId}/rubricas/{id}")
+    public ResponseEntity<ContraChequeRubrica> updateRubrica(@PathVariable Long contraChequeId, @PathVariable Long id, @RequestBody ContraChequeRubrica rubricaDetails) {
+        try {
+            ContraChequeRubrica updatedRubrica = contraChequeRubricaService.updateContraChequeRubrica(contraChequeId, id, rubricaDetails);
+            return ResponseEntity.ok(updatedRubrica);
+        } catch (UpdateRecordException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{contraChequeId}/rubricas/{id}")
+    public ResponseEntity<Void> deleteRubrica(@PathVariable Long contraChequeId, @PathVariable Long id) {
+        contraChequeRubricaService.deleteByIdAndContraChequeId(id, contraChequeId);
         return ResponseEntity.noContent().build();
     }
 }

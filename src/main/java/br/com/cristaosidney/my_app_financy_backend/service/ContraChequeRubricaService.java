@@ -5,6 +5,7 @@ import br.com.cristaosidney.my_app_financy_backend.model.ContraChequeRubrica;
 import br.com.cristaosidney.my_app_financy_backend.repository.ContraChequeRubricaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -39,5 +40,17 @@ public class ContraChequeRubricaService {
 
     public void deleteById(Long id) {
         contraChequeRubricaRepository.deleteById(id);
+    }
+
+    public void deleteByIdAndContraChequeId(Long id, Long contraChequeId) {
+        contraChequeRubricaRepository.deleteByIdAndContraChequeId(id, contraChequeId);
+    }
+
+    public Optional<ContraChequeRubrica> findByIdAndContraChequeId(Long id, Long contraChequeId) {
+        return contraChequeRubricaRepository.findByIdAndContraChequeId(id, contraChequeId);
+    }
+
+    public List<ContraChequeRubrica> findAllByContraChequeId(Long contraChequeId) {
+        return contraChequeRubricaRepository.findAllByContraChequeId(contraChequeId);
     }
 }
