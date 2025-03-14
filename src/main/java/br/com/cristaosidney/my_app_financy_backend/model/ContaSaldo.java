@@ -2,6 +2,7 @@ package br.com.cristaosidney.my_app_financy_backend.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,7 +15,9 @@ public class ContaSaldo {
     private Long id;
 
     private String nome;
-    private String descricao;
+
+    @Enumerated(EnumType.STRING)
+    private TipoContaSaldo tipoDaContaSaldo;
 
     @Enumerated(EnumType.STRING)
     private Natureza naturezaDaConta;

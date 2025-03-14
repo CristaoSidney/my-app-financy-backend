@@ -5,6 +5,7 @@ import br.com.cristaosidney.my_app_financy_backend.model.ContaSaldo;
 import br.com.cristaosidney.my_app_financy_backend.repository.ContaSaldoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ public class ContaSaldoService {
     public ContaSaldo updateContaSaldo(Long id, ContaSaldo contaSaldoDetails) {
         return contaSaldoRepository.findById(id).map(contaSaldo -> {
             contaSaldo.setNome(contaSaldoDetails.getNome());
-            contaSaldo.setDescricao(contaSaldoDetails.getDescricao());
+            contaSaldo.setTipoDaContaSaldo(contaSaldoDetails.getTipoDaContaSaldo());
             contaSaldo.setNaturezaDaConta(contaSaldoDetails.getNaturezaDaConta());
             contaSaldo.setDiaDeFechamentoMensal(contaSaldoDetails.getDiaDeFechamentoMensal());
             contaSaldo.setCreatedAt(contaSaldoDetails.getCreatedAt());
