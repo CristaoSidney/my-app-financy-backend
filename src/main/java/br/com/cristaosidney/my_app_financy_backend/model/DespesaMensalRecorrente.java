@@ -1,13 +1,18 @@
 package br.com.cristaosidney.my_app_financy_backend.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "despesa_mensal_recorrente")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DespesaMensalRecorrente {
 
     @Id
